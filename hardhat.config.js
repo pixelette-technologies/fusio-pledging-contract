@@ -5,26 +5,23 @@ require('dotenv').config();
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
-    compilers: [
-      {
-        version: "0.8.20",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200
-          }
-        }
-      }
-    ]
+    version: "0.8.28",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
   },
 
   etherscan: {
     apiKey: {
       bscTestnet: process.env.TESTNET_BSCSCAN_API_KEY,
+      bsc: process.env.MAINNET_BSCSCAN_API_KEY, 
     }
   },
 
-  defaultNetwork: "bscTestnet",
+  defaultNetwork: "bsc",
   
   networks: {
     hardhat: {
@@ -32,6 +29,11 @@ module.exports = {
     bscTestnet: {
       url: process.env.BSC_TESTNET_RPC_URL,
       chainId: 97,
+      accounts: [process.env.PRIVATE_KEY]
+    },
+    bsc: {
+      url: process.env.BSC_MAINNET_RPC_URL, 
+      chainId: 56, 
       accounts: [process.env.PRIVATE_KEY]
     }
   }

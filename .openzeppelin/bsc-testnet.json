@@ -2,49 +2,49 @@
   "manifestVersion": "3.2",
   "proxies": [
     {
-      "address": "0x98Fe003939F3C72eA44273181fd4df365DB33c2d",
-      "txHash": "0x9b460798131402cb145391a39381b55d127e81c7d95a2b212cfe5fdb67a884b0",
-      "kind": "transparent"
+      "address": "0x76996B33d097618ce96bDdda870398C50c81c4d9",
+      "txHash": "0xc517a11a85f78076c3a55f1b0932694b0c8f1068cbcefd9879a832aab819f9bd",
+      "kind": "uups"
     }
   ],
   "impls": {
-    "a9d472237d64bb318530fc36dd447fe5e7897195ddd586f69c62606027186bfd": {
-      "address": "0xA3dC8A100616Dd4CA24F9Da7C61B7D8fB522e055",
-      "txHash": "0x91514b5bc28b4932195609cb19de70545b7f262b096df178762ec78785935362",
+    "1385ae0dfbd65b8e1ac244832be5fd1d3ff35bf18f1345c9c3bb30adccde923d": {
+      "address": "0xDd98C02D8Ca081f9b968c1418E8c31bA6cdBF043",
+      "txHash": "0x14f2d859cde2696cb245e7433ae8119c1f2cfde14d0cf18211e52434aa041184",
       "layout": {
-        "solcVersion": "0.8.20",
+        "solcVersion": "0.8.28",
         "storage": [
           {
             "label": "token",
             "offset": 0,
             "slot": "0",
-            "type": "t_contract(IERC20)1070",
+            "type": "t_contract(IERC20)1763",
             "contract": "FusioPledge",
-            "src": "contracts/FusioPledge.sol:17"
+            "src": "contracts/FusioPledge.sol:65"
           },
           {
             "label": "pledges",
             "offset": 0,
             "slot": "1",
-            "type": "t_mapping(t_address,t_struct(Pledge)6326_storage)",
+            "type": "t_mapping(t_address,t_struct(Pledge)7406_storage)",
             "contract": "FusioPledge",
-            "src": "contracts/FusioPledge.sol:19"
+            "src": "contracts/FusioPledge.sol:70"
           },
           {
             "label": "tiers",
             "offset": 0,
             "slot": "2",
-            "type": "t_mapping(t_uint256,t_struct(Tier)6333_storage)",
+            "type": "t_mapping(t_uint256,t_struct(Tier)7412_storage)",
             "contract": "FusioPledge",
-            "src": "contracts/FusioPledge.sol:20"
+            "src": "contracts/FusioPledge.sol:75"
           },
           {
-            "label": "signers",
+            "label": "isSigner",
             "offset": 0,
             "slot": "3",
             "type": "t_mapping(t_address,t_bool)",
             "contract": "FusioPledge",
-            "src": "contracts/FusioPledge.sol:21"
+            "src": "contracts/FusioPledge.sol:80"
           },
           {
             "label": "usedSalts",
@@ -52,7 +52,15 @@
             "slot": "4",
             "type": "t_mapping(t_bytes32,t_bool)",
             "contract": "FusioPledge",
-            "src": "contracts/FusioPledge.sol:22"
+            "src": "contracts/FusioPledge.sol:85"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "FusioPledge",
+            "src": "contracts/FusioPledge.sol:90"
           }
         ],
         "types": {
@@ -72,7 +80,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(EIP712Storage)221_storage": {
+          "t_struct(EIP712Storage)346_storage": {
             "label": "struct EIP712Upgradeable.EIP712Storage",
             "members": [
               {
@@ -132,7 +140,19 @@
             ],
             "numberOfBytes": "32"
           },
-          "t_struct(ReentrancyGuardStorage)158_storage": {
+          "t_struct(PausableStorage)219_storage": {
+            "label": "struct PausableUpgradeable.PausableStorage",
+            "members": [
+              {
+                "label": "_paused",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)283_storage": {
             "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
             "members": [
               {
@@ -152,7 +172,11 @@
             "label": "uint64",
             "numberOfBytes": "8"
           },
-          "t_contract(IERC20)1070": {
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_contract(IERC20)1763": {
             "label": "contract IERC20",
             "numberOfBytes": "20"
           },
@@ -160,7 +184,7 @@
             "label": "mapping(address => bool)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_struct(Pledge)6326_storage)": {
+          "t_mapping(t_address,t_struct(Pledge)7406_storage)": {
             "label": "mapping(address => struct FusioPledge.Pledge)",
             "numberOfBytes": "32"
           },
@@ -168,87 +192,93 @@
             "label": "mapping(bytes32 => bool)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_struct(Tier)6333_storage)": {
+          "t_mapping(t_uint256,t_struct(Tier)7412_storage)": {
             "label": "mapping(uint256 => struct FusioPledge.Tier)",
             "numberOfBytes": "32"
           },
-          "t_struct(Pledge)6326_storage": {
+          "t_struct(Pledge)7406_storage": {
             "label": "struct FusioPledge.Pledge",
             "members": [
+              {
+                "label": "id",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "0"
+              },
               {
                 "label": "amount",
                 "type": "t_uint256",
                 "offset": 0,
-                "slot": "0"
+                "slot": "1"
               },
               {
                 "label": "startTime",
                 "type": "t_uint256",
                 "offset": 0,
-                "slot": "1"
+                "slot": "2"
               },
               {
                 "label": "endTime",
                 "type": "t_uint256",
                 "offset": 0,
-                "slot": "2"
-              },
-              {
-                "label": "tier",
-                "type": "t_uint256",
-                "offset": 0,
                 "slot": "3"
               },
               {
-                "label": "totalRewards",
+                "label": "interval",
                 "type": "t_uint256",
                 "offset": 0,
                 "slot": "4"
               },
               {
-                "label": "remainingRewards",
+                "label": "totalRewards",
                 "type": "t_uint256",
                 "offset": 0,
                 "slot": "5"
               },
               {
-                "label": "lastClaimed",
+                "label": "monthlyRewards",
                 "type": "t_uint256",
                 "offset": 0,
                 "slot": "6"
               },
               {
-                "label": "isActive",
-                "type": "t_bool",
+                "label": "claimedRewards",
+                "type": "t_uint256",
                 "offset": 0,
                 "slot": "7"
+              },
+              {
+                "label": "lastClaimedEpoch",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "isPledgeEnded",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "9"
               }
             ],
-            "numberOfBytes": "256"
+            "numberOfBytes": "320"
           },
-          "t_struct(Tier)6333_storage": {
+          "t_struct(Tier)7412_storage": {
             "label": "struct FusioPledge.Tier",
             "members": [
               {
-                "label": "interval",
+                "label": "apr",
                 "type": "t_uint256",
                 "offset": 0,
                 "slot": "0"
               },
               {
-                "label": "percentage",
-                "type": "t_uint256",
-                "offset": 0,
-                "slot": "1"
-              },
-              {
                 "label": "isActive",
                 "type": "t_bool",
                 "offset": 0,
-                "slot": "2"
+                "slot": "1"
               }
             ],
-            "numberOfBytes": "96"
+            "numberOfBytes": "64"
           }
         },
         "namespaces": {
@@ -284,6 +314,16 @@
               "src": "@openzeppelin/contracts-upgradeable/utils/cryptography/EIP712Upgradeable.sol:44",
               "offset": 0,
               "slot": "3"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Pausable": [
+            {
+              "contract": "PausableUpgradeable",
+              "label": "_paused",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol:21",
+              "offset": 0,
+              "slot": "0"
             }
           ],
           "erc7201:openzeppelin.storage.ReentrancyGuard": [

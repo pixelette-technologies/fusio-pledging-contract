@@ -18,10 +18,11 @@ async function main() {
     const amount = ethers.parseEther("10"); // 10 Tokens
     const interval = 12; //minutes
    
-    // const id = "0xb78ed3e3a29533d2001130027e928ed23fe39dc1932094b042e6c406b824b96b";  //while claimimg use this one and replace with the id you used for pledge should be smae one
+    // const id = "0x9c0127535a91e38e0fcf4b8ba187c3b466864eafc4d2971dcc832a1acf1102cc";  //while claimimg use this one and replace with the id you used for pledge should be smae one
     const id = ethers.keccak256(ethers.toUtf8Bytes(Date.now().toString() + Math.random().toString())); //make it same the id for the pledge if pledge against that user exists
     const status = ethers.keccak256(ethers.toUtf8Bytes("active"));
     const salt = ethers.keccak256(ethers.toUtf8Bytes("salt-" + Math.random().toString()));
+    const expiry = 1745584285;
 
     console.log("📌 Generated Pledge Data:", { id, status, salt });
 
@@ -33,18 +34,19 @@ async function main() {
     };
 
     const types = {
-        Pledge: [
+        Claim: [
             { name: "user", type: "address" },
             { name: "token", type: "address" },
             { name: "amount", type: "uint256" },
             { name: "interval", type: "uint256" },
             { name: "id", type: "bytes32" },
             { name: "status", type: "bytes32" },
-            { name: "salt", type: "bytes32" }
+            { name: "salt", type: "bytes32" },
+            { name: "expiry", type: "uint256"},
         ]
     };
 
-    const pledgeData = { user, token, amount, interval, id, status, salt };
+    const pledgeData = { user, token, amount, interval, id, status, salt, expiry };
 
     console.log("📌 Pledge Data:", pledgeData);
 
@@ -59,21 +61,21 @@ async function main() {
     }
 
     const encodedData = ethers.AbiCoder.defaultAbiCoder().encode(
-        [ "uint256", "uint256", "bytes32", "bytes32", "bytes32"],
-        [ amount, interval, id, status, salt]
+        [ "uint256", "uint256", "bytes32", "bytes32", "bytes32", "uint256"],
+        [ amount, interval, id, status, salt, expiry]
     );
     console.log("Encoded Data:", encodedData);
     
     const decoded = ethers.AbiCoder.defaultAbiCoder().decode(
-        [ "uint256", "uint256", "bytes32", "bytes32", "bytes32"],
-        "0x000000000000000000000000000000000000000000000001158e460913d00000000000000000000000000000000000000000000000000000000000000000000cd8a47b98d1a5741ef5c233360465fd084c82999b2bc17bf5f13c4c6d0f45d2dcb4d829413f0d2c4d74c8ff63e02c9925119a56008208dd29db841c5f35ed3ad37450112144dc5d73442e0982a42ef78a544fc8c029ed4103a9cd5b6f72abc63a"
+        [ "uint256", "uint256", "bytes32", "bytes32", "bytes32", "uint256"],
+        encodedData
     );
     console.log("Decoded Interval:", decoded[1].toString());
     console.log("Decoded amount:", decoded[0].toString());
     console.log("Decoded id:", decoded[2].toString());
     console.log("Decoded status:", decoded[3].toString());
     console.log("Decoded salt:", decoded[4].toString());
-
+    console.log("Decoded status:", decoded[5].toString());
 }
 
 main().catch((error) => {
