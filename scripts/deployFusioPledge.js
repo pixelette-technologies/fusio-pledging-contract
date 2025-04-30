@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 
 async function main() {
-    const fusioToken = "0xeb54a1331225bC8fd5e2e594Cb3A2fFA990d3325"; 
+    const fusioToken = "0x91E4096B0af686a6c1aac303fcf98cAdB82F4089"; 
     const fusioPledge =  await hre.ethers.getContractFactory("contracts/FusioPledge.sol:FusioPledge");
     console.log("Deployment started");
     const FusioPledge =  await upgrades.deployProxy(fusioPledge, [fusioToken], {

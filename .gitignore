@@ -5,6 +5,12 @@ node_modules
 /cache
 /artifacts
 
+# OpenZeppelin upgrade files (only local artifacts, not contracts)
+.openzeppelin/
+
+# VSCode settings
+.vscode/
+
 # TypeChain files
 /typechain
 /typechain-types
@@ -15,3 +21,6 @@ node_modules
 
 # Hardhat Ignition default folder for deployments against a local node
 ignition/deployments/chain-31337
+
+# MacOS specific
+.DS_Store
