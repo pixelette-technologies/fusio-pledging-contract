@@ -21,10 +21,11 @@ module.exports = {
     }
   },
 
-  defaultNetwork: "bsc",
+  defaultNetwork: "hardhat",
   
   networks: {
-    hardhat: {
+    hardhat: { 
+      chainId: 31337
     },
     bscTestnet: {
       url: process.env.BSC_TESTNET_RPC_URL,
