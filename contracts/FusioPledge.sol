@@ -44,7 +44,7 @@ contract FusioPledge is Initializable, EIP712Upgradeable, OwnableUpgradeable, Re
         bool isActive; //flag to indicate if tier is active
     }
 
-    uint256 private constant EPOCH_DURATION = 30 days; //30 days for mainnet
+    uint256 private constant EPOCH_DURATION = 30 days;
     bytes32 private constant PLEDGE_TYPEHASH = keccak256(
         "Pledge(address user,address token,uint256 amount,uint256 interval,bytes32 id,bytes32 status,bytes32 salt)"
     );
@@ -53,12 +53,10 @@ contract FusioPledge is Initializable, EIP712Upgradeable, OwnableUpgradeable, Re
     );
     uint256 private constant MIN_INTERVAL = 30; //1 month
     uint256 private constant MAX_APR = 30000; // 300% in BPS (Basis Points)
-    uint256 private constant MAX_INTERVAL = 365 days;
+    uint256 private constant ONE_YEAR = 365 days;
     uint256 private constant BPS_DENOMINATOR = 10000;
     uint256 private constant MONTHS_IN_YEAR = 12;
 
-    // uint256 private constant MIN_INTERVAL = 30; //mainnet
-    // uint256 private constant MAX_INTERVAL = 365 days; //mainnet
     /**
      * @notice The ERC20 token that users can pledge
      */
@@ -190,10 +188,10 @@ contract FusioPledge is Initializable, EIP712Upgradeable, OwnableUpgradeable, Re
         if (!isSigner[signer]) revert InvalidSigner();
 
         uint256 startTime = block.timestamp;
-        uint256 duration = interval * 1 days; //days for mainnet
-        uint256 endTime = startTime + duration; //for mainnet use days;
-        uint256 totalRewards = calculateTotalRewards(amount, tier.apr, duration);//for testnet
-        uint256 monthlyRewards = calculateMonthlyRewards(amount, tiers[30].apr); //for testent
+        uint256 duration = interval * 1 days;
+        uint256 endTime = startTime + duration;
+        uint256 totalRewards = calculateTotalRewards(amount, tier.apr, duration);
+        uint256 monthlyRewards = calculateMonthlyRewards(amount, tiers[30].apr);
 
         pledges[msg.sender] = Pledge({
             id: id,
@@ -404,7 +402,7 @@ contract FusioPledge is Initializable, EIP712Upgradeable, OwnableUpgradeable, Re
         bool isEnded = false;
         uint256 remainingRewards = userPledge.totalRewards - userPledge.claimedRewards;
 
-        if (epochsPassed * 1 days >= userPledge.interval || claimableReward > remainingRewards){
+        if (block.timestamp - userPledge.startTime >= userPledge.interval || claimableReward > remainingRewards){
             claimableReward = remainingRewards;
             isEnded = true;
         }
@@ -424,7 +422,7 @@ contract FusioPledge is Initializable, EIP712Upgradeable, OwnableUpgradeable, Re
         uint256 _apr,
         uint256 _duration //in seconds
     ) public pure returns (uint256) {
-        return (_amount * _apr * _duration) / (MAX_INTERVAL * BPS_DENOMINATOR);
+        return (_amount * _apr * _duration) / (ONE_YEAR * BPS_DENOMINATOR);
     }
 
     /**
