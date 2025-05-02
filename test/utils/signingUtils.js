@@ -47,20 +47,21 @@ async function getSignedPledgeData({
   amount,
   interval,
   pledgeContract,
+  inValidId = false,
+  inValidStatus = false,
+  inValidSalt = false
 }) {
   const pledgeContractAddress = await pledgeContract.getAddress()
-  console.log("pldege contract address", pledgeContractAddress);
-
   const provider = ethers.provider; // Access Hardhat's provider
   const chainId = (await provider.getNetwork()).chainId;
   const domain = DOMAIN(pledgeContractAddress, chainId);
 
-  console.log("signer address", signer.address)
-  console.log("user address", user.address);
-  console.log("token address", token.target);
-
-  const { id, status, salt } = await getParams();
-
+  let id, status, salt;
+  const { id: paramId, status: paramStatus, salt: paramSalt } = await getParams();
+  inValidId ? id = ethers.ZeroHash : id = paramId;
+  inValidStatus ? status = ethers.ZeroHash : status = paramStatus;
+  inValidSalt ? salt = ethers.ZeroHash : salt = paramSalt;
+  
   const data = {
     user: user.address,
     token: token.target,
@@ -95,7 +96,8 @@ async function getSignedClaimData({
   id,
   pledgeContract,
   salt: providedSalt,
-  expiryPassed = false
+  expiryPassed = false,
+  fullClaim = false
 }) {
   const pledgeContractAddress = await pledgeContract.getAddress();
   const chainId = (await ethers.provider.getNetwork()).chainId;
@@ -111,14 +113,13 @@ async function getSignedClaimData({
   }
 
   const currentBlock = await ethers.provider.getBlock('latest');
-  const expiry = expiryPassed
-    ? currentBlock.timestamp - 60 // expired 1 min ago
-    : currentBlock.timestamp + 900; // valid for next 15 min
 
-  console.log("id", id );
-  console.log("status", status );
-  console.log("claimSalt", salt );
-  console.log("expiry", expiry);
+  const expiry = fullClaim
+    ? currentBlock.timestamp + 2 * 365 * 24 * 60 * 60 // Expiry in 2 years
+    : expiryPassed
+    ? currentBlock.timestamp - 60 // Expired 1 minute ago for preclaim
+    : currentBlock.timestamp + 900; // Valid for the next 15 minutes for preclaim
+  
 
   const value = {
     user: user.address,
@@ -130,7 +131,6 @@ async function getSignedClaimData({
     salt,
     expiry,
   };
-  console.log("Expiry in value object: ", expiry);  // Log to confirm
 
   const claimSignature = await signer.signTypedData(domain, { Claim : CLAIM_TYPE }, value);
 
