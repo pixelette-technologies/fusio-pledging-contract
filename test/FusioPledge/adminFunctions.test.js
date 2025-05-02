@@ -9,8 +9,6 @@ describe("FusioPledge Admin Functions", function () {
 
   beforeEach(async function () {
     ({ owner, addr1, addr2, token, fusioPledge } = await deployFusioPledge());
-    console.log("addr1:", addr1); // This should show the signer object with the `address` property
-
   });
 
   describe("setTier", function () {

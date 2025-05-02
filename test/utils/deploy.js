@@ -11,8 +11,7 @@ async function deployFusioPledge() {
   const token = await Token.deploy();
   await token.waitForDeployment();
   const tokenDeployedAddress = await token.getAddress();
-
-  console.log("token address", tokenDeployedAddress);
+  console.log("🚀 ~ deployFusioPledge ~ tokenDeployedAddress:", tokenDeployedAddress)
 
   // Deploy FusioPledge
   const FusioPledge = await ethers.getContractFactory("FusioPledge");
@@ -21,8 +20,7 @@ async function deployFusioPledge() {
   });
   await fusioPledge.waitForDeployment();
   const fusioPledgeDeployedAddress = await fusioPledge.getAddress();
-
-  console.log("pledge contract address", fusioPledgeDeployedAddress)
+  console.log("🚀 ~ deployFusioPledge ~ fusioPledgeDeployedAddress:", fusioPledgeDeployedAddress)
 
   const amountToTransfer = ethers.parseEther("1000000"); 
   await token.connect(owner).transfer(fusioPledgeDeployedAddress, amountToTransfer);
