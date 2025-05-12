@@ -1,5 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
-require("@openzeppelin/hardhat-upgrades")
+require("@openzeppelin/hardhat-upgrades");
+require('@primitivefi/hardhat-dodoc');
 require('dotenv').config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -37,5 +38,10 @@ module.exports = {
       chainId: 56, 
       accounts: [process.env.PRIVATE_KEY]
     }
+  },
+
+  dodoc: {
+    runOnCompile: false,
+    debugMode: true,
   }
 };
