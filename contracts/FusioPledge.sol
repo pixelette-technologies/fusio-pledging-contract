@@ -229,7 +229,7 @@ contract FusioPledge is Initializable, EIP712Upgradeable, OwnableUpgradeable, Re
 
         if (id != userPledge.id) revert PledgeNotFound();
         if (userPledge.isPledgeEnded) revert PledgeEnded();
-        if (token.balanceOf(msg.sender) < amount) revert PledgeBalanceTooLow();
+        if (block.timestamp <= userPledge.endTime && token.balanceOf(msg.sender) < amount) revert PledgeBalanceTooLow();
         if (block.timestamp < userPledge.startTime + EPOCH_DURATION) revert TooEarlyToClaim();
         if (userPledge.totalRewards <= userPledge.claimedRewards) revert NoRewardsLeft();
 
@@ -402,7 +402,7 @@ contract FusioPledge is Initializable, EIP712Upgradeable, OwnableUpgradeable, Re
         bool isEnded = false;
         uint256 remainingRewards = userPledge.totalRewards - userPledge.claimedRewards;
 
-        if (block.timestamp - userPledge.startTime >= userPledge.interval || claimableReward > remainingRewards){
+        if (block.timestamp > userPledge.endTime || claimableReward > remainingRewards){
             claimableReward = remainingRewards;
             isEnded = true;
         }

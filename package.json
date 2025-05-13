@@ -21,9 +21,10 @@
     "typechain": "^8.3.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts-upgradeable": "^5.2.0",
     "@openzeppelin/contracts": "^5.2.0",
+    "@openzeppelin/contracts-upgradeable": "^5.2.0",
     "@openzeppelin/hardhat-upgrades": "^3.9.0",
+    "@primitivefi/hardhat-dodoc": "^0.2.3",
     "dotenv": "^16.4.7"
   }
 }

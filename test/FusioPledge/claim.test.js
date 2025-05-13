@@ -87,23 +87,6 @@ describe("FusioPledge: claimRewards()", () => {
     await expect(fusioPledge.connect(addr1).claimRewards(claimEncodedData, claimSignature)).to.be.revertedWithCustomError(fusioPledge, "TooEarlyToClaim");
   });
 
-  it("should revert if user's balance is too low", async () => {
-    await fastForwardEpochs();
-
-    const { claimSignature, claimEncodedData } = await getSignedClaimData({
-      signer: owner,
-      user: addr1,
-      token,
-      amount: ethers.parseEther("20"),  // Amount greater than balance
-      interval,
-      id: pledgeId,
-      pledgeContract: fusioPledge,
-    });
-  
-    await expect(fusioPledge.connect(addr1).claimRewards(claimEncodedData, claimSignature))
-      .to.be.revertedWithCustomError(fusioPledge, "PledgeBalanceTooLow");
-  });
-
   it("should revert on reused salt", async () => {
     await fastForwardEpochs();
 
@@ -187,6 +170,30 @@ describe("FusioPledge: claimRewards()", () => {
     const expectedMonthlyReward = calculateRewardForDuration(amount, 1200, 1);
   
     expect(after - before).to.equal(expectedMonthlyReward);
+  });
+
+  it("should fail if user balance is low than pledged amount for pre-claim", async () => {
+    const pledgedAmount = amount;
+    const userBalance = await token.balanceOf(addr1.address);
+    const transferAmount = userBalance - ethers.parseEther("1");
+    console.log("🚀 ~ it ~ transferAmount:", transferAmount)
+
+    await token.connect(addr1).transfer(owner.address, transferAmount);
+    await fastForwardEpochs();
+
+    const { claimSignature, claimEncodedData } = await getSignedClaimData({
+      signer: owner,
+      user: addr1,
+      token,
+      amount: pledgedAmount,
+      interval,
+      id: pledgeId,
+      pledgeContract: fusioPledge,
+    });
+
+    await expect(
+      fusioPledge.connect(addr1).claimRewards(claimEncodedData, claimSignature)
+    ).to.be.revertedWithCustomError(fusioPledge, "PledgeBalanceTooLow");
   });
 
   it("should not allow claiming rewards after only 20 days (partial epoch) and revert with TooEarlyToClaim", async () => {
@@ -361,6 +368,38 @@ describe("FusioPledge: claimRewards()", () => {
     const before = await token.balanceOf(addr1.address);
     console.log("🚀 ~ it ~ before:", before)
   
+    await fusioPledge.connect(addr1).claimRewards(claimEncodedData, claimSignature);
+  
+    const after = await token.balanceOf(addr1.address);
+    console.log("🚀 ~ it ~ after:", after)
+  
+    const expectedTotalRewards = calculateRewardForDuration(amount, 2800, 12);
+    console.log("🚀 ~ it ~ expectedTotalRewards:", expectedTotalRewards)
+  
+    expect(after - before).to.equal(expectedTotalRewards);
+  });
+  
+  it("should allow calim even if user balance is low than pledged amount after full duration", async () => {
+    const pledgedAmount = amount;
+    const userBalance = await token.balanceOf(addr1.address);
+    const transferAmount = userBalance - ethers.parseEther("1");
+
+    await token.connect(addr1).transfer(owner.address, transferAmount);
+    await fastForwardEpochs(12, { is12thMonth: true });
+
+    const before = await token.balanceOf(addr1.address);
+    console.log("🚀 ~ it ~ before:", before);
+
+    const { claimSignature, claimEncodedData } = await getSignedClaimData({
+      signer: owner,
+      user: addr1,
+      token,
+      amount: pledgedAmount,
+      interval,
+      id: pledgeId,
+      pledgeContract: fusioPledge,
+    });
+
     await fusioPledge.connect(addr1).claimRewards(claimEncodedData, claimSignature);
   
     const after = await token.balanceOf(addr1.address);
